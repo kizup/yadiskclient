@@ -6,5 +6,6 @@ import io.reactivex.Single
 interface DiskRepo {
 
     fun listFiles(dir: String): Single<Resource>
+    fun metainfo(src: Resource): Single<Resource>
 
 }

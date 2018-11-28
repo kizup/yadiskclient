@@ -5,7 +5,10 @@ import com.yandex.disk.rest.Credentials
 import com.yandex.disk.rest.RestClient
 import com.yandex.disk.rest.json.Resource
 import com.yandex.disk.rest.util.ResourcePath
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.functions.Consumer
+import io.reactivex.schedulers.Schedulers
 import ru.kizapp.yadiskclient.data.disk.DiskRepo
 import ru.kizapp.yadiskclient.data.disk.DiskRepoImpl
 import ru.kizapp.yadiskclient.data.prefs.PrefsRepo
@@ -24,12 +27,29 @@ class ListFilesViewModel(router: Router, mPrefs: PrefsRepo) : BaseViewModel(rout
     }
 
     fun loadFiles() {
-        mDiskRepo.listFiles(mCurrentDir)
-                .subscribe(Consumer {
+        launch {
+            mDiskRepo.listFiles(mCurrentDir)
+                .flatMap { src ->
+                    return@flatMap Observable.fromIterable(src.resourceList.items)
+                        .flatMapSingle { item ->
+                            return@flatMapSingle mDiskRepo.metainfo(item)
+                                .map {
+                                    val index = src.resourceList.items.indexOf(item)
+                                    src.resourceList.items[index] = it
+                                    return@map index
+                                }
+                        }
+                        .toList()
+                        .map { return@map src }
+                }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
                     mFilesLiveData.value = it
-                }, Consumer {
+                }, {
                     it.printStackTrace()
                 })
+        }
     }
 
     fun resourceSelected(resource: Resource) {

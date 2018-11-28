@@ -3,8 +3,11 @@ package ru.kizapp.yadiskclient.view.list
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.view.View.GONE
+import android.view.View.VISIBLE
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.github.ybq.android.spinkit.SpinKitView
 import com.yandex.disk.rest.json.Resource
 import kotlinx.android.synthetic.main.fragment_list_files.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -56,8 +59,10 @@ class ListFilesFragment : BaseFragment() {
             mFilesAdapter.mFiles.clear()
             mFilesAdapter.mFiles.addAll(it.resourceList.items)
             mFilesAdapter.notifyDataSetChanged()
+            loading.hide()
         })
         mListFilesViewModel.loadFiles()
+        loading.show()
     }
 
     override fun onResume() {
@@ -70,4 +75,21 @@ class ListFilesFragment : BaseFragment() {
         mListFilesViewModel.onBackPressed()
     }
 
+}
+
+fun View.show() {
+    animate()
+        .setDuration(350)
+        .alpha(1f)
+        .withStartAction { visibility = VISIBLE }
+        .start()
+}
+
+fun View.hide() {
+    animate()
+        .setDuration(350)
+        .alpha(0f)
+        .withStartAction { visibility = VISIBLE }
+        .withEndAction { visibility = GONE }
+        .start()
 }

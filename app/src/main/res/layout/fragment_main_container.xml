@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_gravity="bottom"
-        app:hideOnScroll="true"
+        app:hideOnScroll="false"
         app:fabCradleMargin="8dp"
         app:fabCradleRoundedCornerRadius="16dp"
         app:backgroundTint="@color/colorPrimary"
@@ -35,7 +35,7 @@
     </com.google.android.material.bottomappbar.BottomAppBar>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
+        android:id="@+id/fab_add"
         app:fabSize="normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

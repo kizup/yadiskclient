@@ -41,6 +41,7 @@ dependencies {
     implementation 'ru.terrakok.cicerone:cicerone:4.0.2'
 
     implementation 'com.yandex.android:disk-restapi-sdk:1.0'
+    implementation 'com.github.ybq:Android-SpinKit:1.2.0'
 
     // Koin for Kotlin
     implementation "org.koin:koin-core:$koin_version"

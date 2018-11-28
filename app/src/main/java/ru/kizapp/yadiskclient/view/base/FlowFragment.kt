@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentTransaction
 import org.koin.android.ext.android.inject
 import ru.kizapp.yadiskclient.R
 import ru.kizapp.yadiskclient.cicerone.SupportAppNavigator
+import ru.kizapp.yadiskclient.view.list.ListFilesFragment
 import ru.terrakok.cicerone.Cicerone
 import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.NavigatorHolder
@@ -32,7 +33,7 @@ abstract class FlowFragment : BaseFragment() {
     private val mNavigatorHolder: NavigatorHolder by lazy {
         mCicerone.navigatorHolder
     }
-    private val mCurrentFragment: BaseFragment?
+    protected val mCurrentFragment: BaseFragment?
         get() = childFragmentManager.findFragmentById(R.id.container) as? BaseFragment
 
     override fun onBackPressed() {

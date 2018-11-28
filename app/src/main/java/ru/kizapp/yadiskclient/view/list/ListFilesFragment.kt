@@ -9,8 +9,10 @@ import com.yandex.disk.rest.json.Resource
 import kotlinx.android.synthetic.main.fragment_list_files.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import ru.kizapp.yadiskclient.R
+import ru.kizapp.yadiskclient.di.MAIN_VIEW_MODEL
 import ru.kizapp.yadiskclient.view.base.BaseFragment
 import ru.kizapp.yadiskclient.viewmodel.list.ListFilesViewModel
+import ru.kizapp.yadiskclient.viewmodel.main.MainContainerViewModel
 
 class ListFilesFragment : BaseFragment() {
 
@@ -26,9 +28,11 @@ class ListFilesFragment : BaseFragment() {
         }
     }
 
-    private lateinit var mCurrentDir: String
+    lateinit var mCurrentDir: String
     private val mListFilesViewModel: ListFilesViewModel by viewModel()
-    private val mFilesAdapter = FilesAdapter(object: OnResourceClicked {
+    private val mMainViewModel: MainContainerViewModel by viewModel(name = MAIN_VIEW_MODEL)
+
+    private val mFilesAdapter = FilesAdapter(object : OnResourceClicked {
         override fun onItemClick(resource: Resource) {
             mListFilesViewModel.resourceSelected(resource)
         }
@@ -54,6 +58,11 @@ class ListFilesFragment : BaseFragment() {
             mFilesAdapter.notifyDataSetChanged()
         })
         mListFilesViewModel.loadFiles()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        mMainViewModel.setTitle(mCurrentDir)
     }
 
     override fun onBackPressed() {

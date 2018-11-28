@@ -11,7 +11,7 @@ import ru.terrakok.cicerone.Navigator
 import ru.terrakok.cicerone.commands.*
 import java.util.*
 
-class SupportAppNavigator : Navigator {
+open class SupportAppNavigator : Navigator {
 
     private val activity: Activity
     private val fragmentManager: FragmentManager
@@ -55,7 +55,7 @@ class SupportAppNavigator : Navigator {
      *
      * @param command the navigation command to apply
      */
-    protected fun applyCommand(command: Command) {
+    open fun applyCommand(command: Command) {
         when (command) {
             is Forward -> activityForward(command)
             is Replace -> activityReplace(command)
@@ -65,7 +65,7 @@ class SupportAppNavigator : Navigator {
     }
 
 
-    protected fun activityForward(command: Forward) {
+    open fun activityForward(command: Forward) {
         val screen = command.screen as SupportAppScreen
         val activityIntent = screen.getActivityIntent(activity)
 
@@ -78,7 +78,7 @@ class SupportAppNavigator : Navigator {
         }
     }
 
-    protected fun fragmentForward(command: Forward) {
+    open fun fragmentForward(command: Forward) {
         val screen = command.screen as SupportAppScreen
         val fragment = createFragment(screen)
 
@@ -98,7 +98,7 @@ class SupportAppNavigator : Navigator {
         localStackCopy!!.add(screen.screenKey)
     }
 
-    protected fun fragmentBack() {
+    open fun fragmentBack() {
         if (localStackCopy!!.size > 0) {
             fragmentManager.popBackStack()
             localStackCopy!!.removeLast()
@@ -107,11 +107,11 @@ class SupportAppNavigator : Navigator {
         }
     }
 
-    protected fun activityBack() {
+    open fun activityBack() {
         activity.finish()
     }
 
-    protected fun activityReplace(command: Replace) {
+    open fun activityReplace(command: Replace) {
         val screen = command.screen as SupportAppScreen
         val activityIntent = screen.getActivityIntent(activity)
 
@@ -125,7 +125,7 @@ class SupportAppNavigator : Navigator {
         }
     }
 
-    protected fun fragmentReplace(command: Replace) {
+    open fun fragmentReplace(command: Replace) {
         val screen = command.screen as SupportAppScreen
         val fragment = createFragment(screen)
 
@@ -167,7 +167,7 @@ class SupportAppNavigator : Navigator {
     /**
      * Performs [BackTo] command transition
      */
-    protected fun backTo(command: BackTo) {
+    open fun backTo(command: BackTo) {
         if (command.screen == null) {
             backToRoot()
         } else {
@@ -201,7 +201,7 @@ class SupportAppNavigator : Navigator {
      * @param nextFragment        next screen fragment
      * @param fragmentTransaction fragment transaction
      */
-    protected fun setupFragmentTransaction(
+    open fun setupFragmentTransaction(
         command: Command,
         currentFragment: Fragment?,
         nextFragment: Fragment?,
@@ -216,7 +216,7 @@ class SupportAppNavigator : Navigator {
      * @param activityIntent activity intent
      * @return transition options
      */
-    protected fun createStartActivityOptions(command: Command, activityIntent: Intent): Bundle? {
+    open fun createStartActivityOptions(command: Command, activityIntent: Intent): Bundle? {
         return null
     }
 
@@ -235,7 +235,7 @@ class SupportAppNavigator : Navigator {
      * @param screen         screen
      * @param activityIntent intent passed to start Activity for the `screenKey`
      */
-    protected fun unexistingActivity(screen: SupportAppScreen, activityIntent: Intent) {
+    open fun unexistingActivity(screen: SupportAppScreen, activityIntent: Intent) {
         // Do nothing by default
     }
 
@@ -245,7 +245,7 @@ class SupportAppNavigator : Navigator {
      * @param screen screen
      * @return instantiated fragment for the passed screen
      */
-    protected fun createFragment(screen: SupportAppScreen): Fragment {
+    open fun createFragment(screen: SupportAppScreen): Fragment {
         val fragment = screen.getFragment()
 
         if (fragment == null) {
@@ -260,11 +260,11 @@ class SupportAppNavigator : Navigator {
      *
      * @param screen screen
      */
-    protected fun backToUnexisting(screen: SupportAppScreen) {
+    open fun backToUnexisting(screen: SupportAppScreen) {
         backToRoot()
     }
 
-    protected fun errorWhileCreatingScreen(screen: SupportAppScreen) {
+    open fun errorWhileCreatingScreen(screen: SupportAppScreen) {
         throw RuntimeException("Can't create a screen: " + screen.screenKey)
     }
 
